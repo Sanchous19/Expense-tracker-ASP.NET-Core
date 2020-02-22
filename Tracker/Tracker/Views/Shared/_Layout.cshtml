@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jquery-unobtrusive-ajax/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Private">@Localizer["PrivateAccount"]</a>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Home" asp-action="Family">@Localizer["FamilyAccount"]</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Home" asp-action="Common">@Localizer["CommonAccounts"]</a>
+                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Roles" asp-action="Admin">@Localizer["AdminRole"]</a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Roles" asp-action="Moderator">@Localizer["ModeratorRole"]</a>
+                    </li>
+                }
+            </ul>
+            <ul class="navbar-nav">
+                @{await Html.RenderPartialAsync("_LanguageSelector");}
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Account" asp-action="LogOff">
+                        <img src="~/images/exit_logo.png" width="30" height="30" />
+                        @Localizer["Exit"]
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <p></p>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+</body>
+</html>

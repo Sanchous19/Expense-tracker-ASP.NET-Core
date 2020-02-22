@@ -1,0 +1,34 @@
+﻿@model List<List<Tracker.Models.Record>>
+
+@{
+    var date = Model[0][0].Date;
+    string month = date.ToString("MMMM", Context.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture);
+}
+
+<h2 align="center">
+    @month @date.Year - <month-expenses records=@Model></month-expenses>
+</h2>
+
+@foreach (var dayRecords in Model)
+{
+    int day = dayRecords[0].Date.Day;
+    <h4>
+        @month, @day - <day-expenses records=@dayRecords></day-expenses>
+    </h4>
+
+    @foreach (var record in dayRecords)
+    {
+        <form class="tr" method="post" asp-controller="InternalRecord" asp-action="Delete" asp-route-id=@record.Id>
+            <span class="td">
+                <label>@record.Thing</label>
+            </span>
+            <span class="td">
+                <label>@record.Cost</label>
+            </span>
+            <span class="td">
+                <label>@record.Description</label>
+            </span>
+            <button class="btn btn-outline-danger" type="submit">@Localizer["Delete"]</button>
+        </form>
+    }
+}

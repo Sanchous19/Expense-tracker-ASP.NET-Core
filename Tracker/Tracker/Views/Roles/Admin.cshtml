@@ -1,0 +1,31 @@
+﻿@model IEnumerable<Tracker.ViewModels.UserRolesViewModel>
+
+
+<h2>@Localizer["UsersList"]</h2>
+<div class="table">
+    @foreach (var user in Model)
+    {
+        <form class="tr" method="post">
+            <input type="hidden" name="id" value="@user.Id" />
+            <span class="td">
+                <label>@user.Name</label>
+            </span>
+            <span class="td">
+                @if (!user.IsAdmin)
+                {
+                    <button class="btn btn-success" type="submit" asp-action="AdminRole">@Localizer["AssignAdmin"]</button>
+                }
+            </span>
+            <span class="td">
+                @if (user.IsModerator)
+                {
+                    <button class="btn btn-danger" type="submit" asp-action="ModeratorRole">@Localizer["RemoveFromModerators"]</button>
+                }
+                else
+                {
+                    <button class="btn btn-success" type="submit" asp-action="ModeratorRole">@Localizer["AssignModerator"]</button>
+                }
+            </span>
+        </form>
+    }
+</div>

@@ -1,0 +1,9 @@
+﻿@model Tracker.Models.Chat
+
+<a class="list-group-item list-group-item-action list-group-item-primary">
+    <h5>@Model.Name</h5>
+    <div class="d-flex justify-content-between">
+        <div>@ViewBag.Text</div>
+        <div>@ViewBag.AuthorName @Model.DateTimeUpdate.ToShortTimeString()</div>
+    </div>
+</a>

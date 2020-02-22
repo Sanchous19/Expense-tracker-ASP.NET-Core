@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand mb-0 h1" asp-controller="Account" asp-action="Login">
+            <img src="~/images/app_logo.png" width="30" height="30" />
+            @Localizer["ExpenseTracker"]
+        </a>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto"></ul>
+            <ul class="navbar-nav">
+                @{await Html.RenderPartialAsync("_LanguageSelector");}
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Account" asp-action="LogIn">@Localizer["LogIn"]</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" asp-controller="Account" asp-action="SignUp">@Localizer["SignUp"]</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>

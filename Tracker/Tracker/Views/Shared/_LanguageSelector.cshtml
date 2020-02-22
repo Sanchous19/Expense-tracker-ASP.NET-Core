@@ -1,0 +1,16 @@
+﻿@{
+    var cultures = LocOptions.Value.SupportedUICultures.Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName }).ToList();
+}
+
+<li class="nav-item dropdown active">
+    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @Localizer["Language"]
+    </a>
+
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        @foreach (var culture in cultures)
+        {
+            <a class="dropdown-item" asp-controller="Settings" asp-action="SelectLanguage" asp-route-returnUrl=@Context.Request.Path asp-route-culture=@culture.Value>@culture.Text</a>
+        }
+    </div>
+</li>

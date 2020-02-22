@@ -1,0 +1,32 @@
+﻿@model List<List<Tracker.Models.Record>>
+
+<form class="d-flex flex-row-reverse">
+    <button class="btn btn-primary" asp-controller="InternalRecord" asp-action="Add">@Localizer["Add"]</button>
+</form>
+<p />
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">@Localizer["Hi"]</h4>
+        <p>@Localizer["ItIsYourPrivateAccount"]</p>
+        <hr>
+        <p class="mb-0">@Localizer["ToAddRecordClickOnTheButton"]</p>
+    </div>
+}
+else
+{
+    <div class="table" id="record-table">
+        @{ await Html.RenderPartialAsync("_RecordTable", Record.GroupByDay(Model[0])); }
+    </div>
+
+    <ul class="pagination pagination-lg">
+        @for (int i = 1; i <= Model.Count; i++)
+        {
+            string recordIds = string.Join('#', @Model[i - 1].Select(r => r.Id).ToList());
+            <li class="page-item">
+                <a class="page-link ajaxLink" asp-controller="Home" asp-action="RecordTable" asp-route-recordIds=@recordIds data-ajax="true" data-ajax-update="#record-table" data-ajax-method="post">@i</a>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,24 @@
+﻿@model Tracker.ViewModels.SignUpViewModel
+
+<h2>@Localizer["SignUpOfNewUser"]</h2>
+<form method="post" asp-controller="Account" asp-action="SignUp">
+    <div asp-validation-summary="ModelOnly" style="color:red"></div>
+    <div class="form-group">
+        <label asp-for="Login"></label>
+        <input class="form-control" asp-for="Login"/>
+        <span asp-validation-for="Login" style="color:red"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input class="form-control" asp-for="Password"/>
+        <span asp-validation-for="Password" style="color:red"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PasswordConfirm"></label>
+        <input class="form-control" asp-for="PasswordConfirm" />
+        <span asp-validation-for="PasswordConfirm" style="color:red"></span>
+    </div>
+    <button class="btn btn-primary" type="submit">
+        @Localizer["SignUp"]
+    </button>
+</form>

@@ -1,0 +1,124 @@
+﻿@model Tracker.Models.Chat
+
+<input type="hidden" id="userId" value=@ViewBag.UserId>
+<input type="hidden" id="chatId" value=@Model.Id>
+
+<form method="post" asp-controller="Chat" asp-action="Exit" asp-route-id=@Model.Id>
+    <button class="btn btn-primary" type="submit">
+        @Localizer["Exit"]
+    </button>
+</form>
+
+<form method="post" asp-controller="Chat" asp-action="Invite" asp-route-id=@Model.Id>
+    <input type="text" name="userName" value='' />
+    <button class="btn btn-primary" type="submit">
+        @Localizer["Invite"]
+    </button>
+</form>
+
+<div class="messages-block" id="messagesBlock">
+    <table id="messagesList">
+        <tr>
+            <th class="col"></th>
+            <th class="col"></th>
+        </tr>
+
+        @foreach (var message in Model.Messages)
+        {
+            <tr>
+                @if (message.UserFromId == ViewBag.UserId)
+                {
+                    <td></td>
+                    <td>
+                        <div class="alert alert-primary" role="alert">
+                            <h5 class="alert-heading">@message.Text</h5>
+                            <hr>
+                            <p class="mb-0">@message.UserFrom.UserName - @message.Date.ToShortTimeString() @message.Date.ToShortDateString()</p>
+                        </div>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <div class="alert alert-primary" role="alert">
+                            <h5 class="alert-heading">@message.Text</h5>
+                            <hr>
+                            <p class="mb-0">@message.UserFrom.UserName - @message.Date.ToShortTimeString() @message.Date.ToShortDateString()</p>
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
+
+<div class="form-inline">
+    <div class="form-group">
+        <textarea class="form-control" type="text" id="messageInput"></textarea>
+    </div>
+    <button class="btn btn-primary mb-2" type="button" id="sendButton">@Localizer["Send"]</button>
+</div>
+
+@if (ViewBag.isOpenModal)
+{
+    <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">@ViewBag.ModalText</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script>
+    var currentUserId = document.getElementById("userId").value;
+    var currentChatId = document.getElementById("chatId").value;
+    var messagesList = document.getElementById("messagesList");
+    var messagesBlock = document.getElementById("messagesBlock");
+
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+
+    document.getElementById("sendButton").disabled = true;
+
+    connection.on("ReceiveMessage", function (chatId, message, userFromId, userFromName, date) {
+        if (chatId == currentChatId) {
+            var tr = document.createElement("tr");
+            if (currentUserId == userFromId) {
+                tr.innerHTML = "<td></td>";
+            }
+            tr.innerHTML += "<div class=\"alert alert-primary\" role=\"alert\"><h5 class=\"alert-heading\">" + message + "</h5><hr><p class=\"mb-0\">" + userFromName + " - " + date + "</p></div>";
+            var h = document.createElement("h1");
+            h.textContent = message + userFromName + date;
+            messagesList.appendChild(tr);
+            messagesBlock.scrollTop = messagesBlock.scrollHeight;
+        }
+    });
+
+    connection.start().then(function () {
+        document.getElementById("sendButton").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        var text = document.getElementById("messageInput").value;
+        connection.invoke("SendMessage", currentChatId, text, currentUserId).catch(function (err) {
+            return console.error(err.toString());
+        });
+        event.preventDefault();
+    });
+
+    window.onload = function () {
+        messagesBlock.scrollTop = messagesList.scrollHeight;
+    }
+
+    $(document).ready(function () {
+        $("#modal").modal('show');
+    });
+</script>

@@ -1,0 +1,32 @@
+﻿@model Tracker.Models.ChatList
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal">
+    Создать чат
+</button>
+<p />
+
+<div class="list-group">
+    @foreach (var chat in Model)
+    {
+        @await Component.InvokeAsync("ChatPresentation", new { chat })
+    }
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">asdfsdafdsa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="modal-body" method="post" asp-controller="Chat" asp-action="Create">
+                <input type="text" name="name" value='' />
+                <button class="btn btn-primary" type="submit">
+                    Добавить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
